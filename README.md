@@ -1,8 +1,9 @@
-# <Ironic Title> CoreLib 
+# < Ironic Title > CoreLib 
 > Still WIP!!!
+
 Unity Framework for quick and simple bootstrapping
 
-## Idea
+## Basic idea
 This is a universal and simple framework for quick setup of small-scale games architecture. It provides:
 - Entry Point
 - Services holder
