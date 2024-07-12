@@ -14,8 +14,9 @@ This is a universal and simple framework for quick setup of small-scale games ar
 - Anything I'll consider useful and universal
 
 ## How to use
-Clone this repository as a submodule to your project's Assets folder
-You should have at least two scenes:
+Clone this repository as a submodule to your project's Assets folder.
+
+In a project you should have at least two scenes:
 - Bootstrapping scene (0) with an object with component inherited from `ApplicationBootstrap`
 - Main scene (1) with an object with component inherited from `SceneBootstrap`
   
