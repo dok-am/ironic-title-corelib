@@ -14,6 +14,7 @@ This is a universal and simple framework for quick setup of small-scale games ar
 - Anything I'll consider useful and universal
 
 ## How to use
+Clone this repository as a submodule to your project's Assets folder
 You should have at least two scenes:
 - Bootstrapping scene (0) with an object with component inherited from `ApplicationBootstrap`
 - Main scene (1) with an object with component inherited from `SceneBootstrap`
@@ -50,3 +51,6 @@ public class GameplaySceneBootstrap : SceneBootstrap
 - EventBus or something like that
 - Saving system
 - Write a proper documentation, I guess
+- Or maybe make it a proper Unity package, idk
+- You are really so interested that you are reading this?
+- Give me some feedback than, what do you think about all of this? Thank you!
