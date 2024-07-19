@@ -4,11 +4,14 @@ using UnityEngine.EventSystems;
 namespace IT.CoreLib.UI
 {
     [RequireComponent(typeof(RectTransform))]
-    public abstract class UIDragNDropView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+    [RequireComponent (typeof(CanvasGroup))]
+    public abstract class UIDragNDropObject<T> : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         public bool IsDragging => _isDragging;
 
         private RectTransform _rectTransform;
+        private CanvasGroup _canvasGroup;
+
         private Canvas _mainCanvas;
         private Transform _gridTransform;
         private int _index;
@@ -28,9 +31,12 @@ namespace IT.CoreLib.UI
         }
         private static GameObject _cellEmptyCopy;
 
+        public abstract T GetValue();
+
         private void Start()
         {
             _rectTransform = GetComponent<RectTransform>();
+            _canvasGroup = GetComponent<CanvasGroup>();
         }
 
         /// <summary>
@@ -53,6 +59,8 @@ namespace IT.CoreLib.UI
             transform.SetParent(_gridTransform, false);
             transform.SetSiblingIndex(_index);
 
+            _canvasGroup.blocksRaycasts = true;
+
             _isDragging = false;
         }
 
@@ -65,6 +73,8 @@ namespace IT.CoreLib.UI
             CellEmptyCopy.SetSiblingIndex(_index);
             CellEmptyCopy.gameObject.SetActive(true);
 
+            _canvasGroup.blocksRaycasts = false;
+
             _isDragging = true;
         }
 
@@ -76,7 +86,7 @@ namespace IT.CoreLib.UI
         public void OnDrag(PointerEventData eventData)
         {
             if (_isDragging)
-                _rectTransform.anchoredPosition += eventData.delta * _mainCanvas.scaleFactor;
+                _rectTransform.anchoredPosition += eventData.delta / _mainCanvas.scaleFactor;
         }
     }
 
