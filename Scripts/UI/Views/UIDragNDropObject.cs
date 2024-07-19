@@ -88,6 +88,7 @@ namespace IT.CoreLib.UI
             if (_isDragging)
                 _rectTransform.anchoredPosition += eventData.delta / _mainCanvas.scaleFactor;
         }
+               
     }
 
 }

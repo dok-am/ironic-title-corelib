@@ -15,6 +15,7 @@ namespace IT.CoreLib
             UIDragNDropObject<T> dndObject = eventData.pointerDrag.GetComponent<UIDragNDropObject<T>>();
             if (dndObject != null)
             {
+                dndObject.StopDragginForced();
                 OnValueDropped?.Invoke(dndObject.GetValue());
             }
         }
