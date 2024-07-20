@@ -15,19 +15,17 @@ namespace IT.CoreLib.UI
         [SerializeField] protected T _itemPrefab;
 
         private List<T> _items = new();
-        
+        private int _poolIndex = 0;
 
         public void UpdateView(P[] dataItems)
         {
             ClearViewItems();
 
-            foreach (P item in dataItems)
+            for (int i=0; i<dataItems.Length; i++)
             {
+                P item = dataItems[i];
                 T viewItem = CreateViewItem(item);
-                viewItem.transform.SetParent(_itemsContainer);
-
-                _items.Add(CreateViewItem(item));
-
+                viewItem.transform.SetSiblingIndex(i);
             }
         }
 
@@ -35,25 +33,55 @@ namespace IT.CoreLib.UI
         {
             foreach (T item in _items)
             {
-                item.PrepareToDestroy();
-            }
-
-            _items.Clear();
-
-            for (int i = 0; i < _itemsContainer.childCount; i++)
-            {
-                Destroy(_itemsContainer.GetChild(i).gameObject);
+                item.PrepareToDeactivate();
+                item.gameObject.SetActive(false);
             }
         }
 
         protected virtual T CreateViewItem(P itemData)
         {
-            //TODO: Create proper pool
-            T viewItem = Instantiate(_itemPrefab.gameObject).GetComponent<T>();
+
+            T viewItem = GetViewItemFromPool();
+            if (viewItem == null)
+            {
+                viewItem = Instantiate(_itemPrefab.gameObject, _itemsContainer).GetComponent<T>();
+                _items.Add(viewItem);
+            } 
+            else
+            {
+                viewItem.gameObject.SetActive(true);
+            }
+
             return SetupViewItem(viewItem, itemData);
         }
 
         protected abstract T SetupViewItem(T viewItem, P itemData);
+
+        private T GetViewItemFromPool()
+        {
+            if (_items.Count == 0 || _poolIndex >= _items.Count)
+                return null;
+
+            T item = _items[_poolIndex];
+
+            if (!item.gameObject.activeSelf)
+            {
+                _poolIndex++;
+                return item;
+            }
+
+            for (_poolIndex = 0; _poolIndex < _items.Count; _poolIndex++)
+            {
+                item = _items[_poolIndex];
+                if (!item.gameObject.activeSelf)
+                {
+                    _poolIndex++;
+                    return item;
+                }
+            }
+
+            return null;
+        }
 
     }
 

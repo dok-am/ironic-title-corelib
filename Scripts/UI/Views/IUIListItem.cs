@@ -5,7 +5,7 @@ namespace IT.CoreLib.UI
 
     public interface IUIListItem 
     {
-        public void PrepareToDestroy();
+        public void PrepareToDeactivate();
     }
 
 }
