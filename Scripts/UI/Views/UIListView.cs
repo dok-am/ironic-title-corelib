@@ -14,7 +14,7 @@ namespace IT.CoreLib.UI
         [SerializeField] protected Transform _itemsContainer;
         [SerializeField] protected T _itemPrefab;
 
-        private List<T> _items = new();
+        protected List<T> _items = new();
         private int _poolIndex = 0;
 
         public void UpdateView(P[] dataItems)
