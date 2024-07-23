@@ -51,6 +51,10 @@ namespace IT.CoreLib.Services
             return _storage.Values.ToArray();
         }
 
+        public void Destroy()
+        {
+            //cool
+        }
     }
 
 }

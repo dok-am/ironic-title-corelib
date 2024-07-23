@@ -28,14 +28,27 @@ namespace IT.CoreLib.Application
             throw new Exception($"[BOOTSTRAP] There is no service of type {typeof(T).Name} in Bootstrap {gameObject.name} ");
         }
 
-        protected T AddService<T>() where T: IService, new()
+        protected T AddService<T>(GameObject servicePrefab = null) where T: IService, new()
         {
             if (_services.ContainsKey(typeof(T)))
             {
                 throw new Exception($"[BOOTSTRAP] Can't add service {typeof(T).Name}, bootstrap {gameObject.name} already has it");
             }
 
-            T service = new T();
+            T service;
+
+            if (servicePrefab == null)
+            {
+                service = new T();
+            } else
+            {
+                service = Instantiate(servicePrefab, transform).GetComponent<T>();
+
+                if (service == null)
+                    throw new Exception($"[BOOTSTRAP] Can't add service {typeof(T).Name}, prefab is incorrect!");
+            }
+
+            
             service.Initialize();
 
             _services.Add(typeof(T), service);
@@ -85,6 +98,20 @@ namespace IT.CoreLib.Application
             foreach (IFixedUpdatable service in _fixedUpdatables)
             {
                 service.FixedUpdate(Time.fixedDeltaTime);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (!Initialized) return;
+
+            foreach (IService service in _services.Values)
+            {
+                service.Destroy();
+                if (service is MonoBehaviour monoService)
+                {
+                    Destroy(monoService.gameObject);
+                }
             }
         }
     }

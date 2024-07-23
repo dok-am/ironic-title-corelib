@@ -7,6 +7,7 @@ namespace IT.CoreLib.Interfaces
     {
         public void Initialize();
         public void OnInitialized(IBootstrap bootstrap);
+        public void Destroy();
     }
 
 }
