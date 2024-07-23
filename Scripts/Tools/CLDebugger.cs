@@ -5,18 +5,25 @@ namespace IT.CoreLib.Tools
 
     public static class CLDebug 
     {
+
+#pragma warning disable CS0162 // Unreachable code detected
+
         /// <summary>
         /// Use it to switch on/off logs
-        /// TODO: move it somewhere not static
+        /// TODO: move it somewhere not static,
+        /// but for now - supress warning here
         /// </summary>
         private const bool DEBUGGER_ENABLED = true;
+        private const bool BOOT_DEBUGGER_ENABLED = false;
 
         public static void BootLog(string log)
         {
-            if (!DEBUGGER_ENABLED)
+            if (!BOOT_DEBUGGER_ENABLED)
                 return;
 
+
             Log(log, "BOOT", "orange");
+
         }
 
         public static void Log(string log, string section = null, string color = "white")
@@ -30,6 +37,8 @@ namespace IT.CoreLib.Tools
 
             Debug.Log($"{prefix}{log}");
         }
+
+#pragma warning restore CS0162 // Unreachable code detected
 
     }
 
