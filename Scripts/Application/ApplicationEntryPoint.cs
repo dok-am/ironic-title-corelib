@@ -1,3 +1,4 @@
+using IT.CoreLib.Tools;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -36,11 +37,15 @@ namespace IT.CoreLib.Application
         {
             await Task.Yield();
 
+            CLDebug.BootLog("Bootstrap scene loaded");
+
             ApplicationBootstrap sceneEP = UnityEngine.Object.FindFirstObjectByType<ApplicationBootstrap>();
             if (sceneEP == null)
                 throw new Exception("0 scene is not an application bootstrap scene!");
 
-            sceneEP.InitializeApplication(this, redirectSceneIndex);
+            await sceneEP.InitializeApplication(this, redirectSceneIndex);
+
+            CLDebug.BootLog("Application initialization finished");
         }
 
     }

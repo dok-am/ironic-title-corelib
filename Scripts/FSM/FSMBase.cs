@@ -1,4 +1,5 @@
 
+using IT.CoreLib.Tools;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ namespace IT.CoreLib.FSM
                 _currentState.OnExit();
 
             _currentState = state;
-            Debug.Log("FMS: " + _name + " is Entering state " + _currentState.Name);
+            CLDebug.Log("FMS: " + _name + " is Entering state " + _currentState.Name);
 
             if (!isTransition)
                 _currentState.OnEnter();

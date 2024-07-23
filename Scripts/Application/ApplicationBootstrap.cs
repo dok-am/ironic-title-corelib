@@ -1,3 +1,4 @@
+using IT.CoreLib.Tools;
 using IT.CoreLib.UI;
 using System;
 using System.Threading.Tasks;
@@ -45,8 +46,10 @@ namespace IT.CoreLib.Application
             }
         }
 
-        public virtual void InitializeApplication(ApplicationEntryPoint applicationEP, int redirectSceneIndex)
+        public virtual async Task InitializeApplication(ApplicationEntryPoint applicationEP, int redirectSceneIndex)
         {
+            CLDebug.BootLog("Initialization begun");
+
             _appEntryPoint = applicationEP;
             _instance = this;
             DontDestroyOnLoad(gameObject);
@@ -56,7 +59,7 @@ namespace IT.CoreLib.Application
             OnServicesInitialized();
             InitializeUI(Instantiate(UIContainerPrefab));
 
-            LoadScene(redirectSceneIndex != 0 ? redirectSceneIndex : 1);
+            await LoadScene(redirectSceneIndex != 0 ? redirectSceneIndex : 1);
         }
 
         //TODO: Possible problems here, should be changed
@@ -67,20 +70,29 @@ namespace IT.CoreLib.Application
             _appUIContainer.Initialize(this);
         }
 
-        public virtual async void LoadScene(int index)
+        public virtual async Task LoadScene(int index)
         {
+            CLDebug.BootLog("Begin transition");
+
             await _appUIContainer.UITransition.StartTransitionAsync(false);
+
+            CLDebug.BootLog("Begin loading scene");
             await SceneManager.LoadSceneAsync(index);
             await Task.Yield();
 
+            CLDebug.BootLog("Scene loaded");
             CurrentScene = FindFirstObjectByType<SceneBootstrap>();
             if (CurrentScene == null)
                 throw new Exception($"There are no SceneBootstrap on scene {index}");
 
             CurrentScene.InitializeBootstrap(this, _appUIContainer);
 
+            CLDebug.BootLog("Scene initialized");
+
             Initialized = true;
             _appUIContainer.UITransition.FinishTransition();
+
+            CLDebug.BootLog("Transition completed");
         }
 
     }
