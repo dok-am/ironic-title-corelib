@@ -1,6 +1,7 @@
+using IT.CoreLib.UI;
 using UnityEngine;
 
-namespace IT.CoreLib.UI.Samples
+namespace IT.CoreLib.Examples
 {
 
     public class FadeUITransition : UITransitionBase
