@@ -17,7 +17,7 @@ namespace IT.CoreLib.UI
 
         protected Dictionary<Type, UIWindowBase> _createdWindows;
 
-        public void Initialize(SceneBootstrap scene, ApplicationUIContainer appUIContainer)
+        public virtual void Initialize(SceneBootstrap scene, ApplicationUIContainer appUIContainer)
         {
             _appUIContainer = appUIContainer;
             _scene = scene;
