@@ -24,7 +24,7 @@ namespace IT.CoreLib.UI
             _createdWindows = new Dictionary<Type, UIWindowBase>();
         }
 
-        public void Deinitialize()
+        public virtual void Deinitialize()
         {
             foreach (UIWindowBase window in _createdWindows.Values)
             {
