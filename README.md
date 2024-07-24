@@ -45,10 +45,12 @@ public class GameplaySceneBootstrap : SceneBootstrap
 }
 ```
 
+## Known issues
+- There SHOULD be a problem in scene changing with services destruction
+
 ## TBD
 - Nested scenes for implementing levels
-- Improve async scene loading for proper loading screens
-- Remake UI system
+- Update/remake UI system
 - EventBus or something like that
 - Saving system
 - Write a proper documentation, I guess
