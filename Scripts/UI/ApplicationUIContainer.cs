@@ -32,6 +32,9 @@ namespace IT.CoreLib.UI
 
         public virtual void RemoveCurrentSceneUI()
         {
+            if (_currentSceneUI == null)
+                return;
+
             _currentSceneUI.Deinitialize();
             Destroy(_currentSceneUI.gameObject);
             _currentSceneUI = null;

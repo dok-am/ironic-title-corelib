@@ -76,6 +76,8 @@ namespace IT.CoreLib.Application
 
             await _appUIContainer.UITransition.StartTransitionAsync(false);
 
+            _appUIContainer.RemoveCurrentSceneUI();
+
             CLDebug.BootLog("Begin loading scene");
             await SceneManager.LoadSceneAsync(index);
             await Task.Yield();
@@ -84,7 +86,7 @@ namespace IT.CoreLib.Application
             CurrentScene = FindFirstObjectByType<SceneBootstrap>();
             if (CurrentScene == null)
                 throw new Exception($"There are no SceneBootstrap on scene {index}");
-
+                        
             CurrentScene.InitializeBootstrap(this, _appUIContainer);
 
             CLDebug.BootLog("Scene initialized");

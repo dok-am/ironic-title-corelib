@@ -1,5 +1,6 @@
 using IT.CoreLib.UI;
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,10 +13,11 @@ namespace IT.CoreLib.Application
         public event Action<SceneBootstrap> OnSceneInitialied;
 
         public SceneUIBase SceneUI => _sceneUI;
+        private SceneUIBase _sceneUI;
 
+        [Header("UI")]
         [SerializeField] private SceneUIBase _sceneUIPrefab;
 
-        private SceneUIBase _sceneUI;
 
         public void InitializeBootstrap(AbstractBootstrap parentBootstrap, ApplicationUIContainer uiContainer)
         {
@@ -40,6 +42,21 @@ namespace IT.CoreLib.Application
             _sceneUI = uiContainer.AddSceneUI(_sceneUIPrefab, this);
         }
 
+        public void ReloadScene()
+        {
+            //TODO: Should be more abstract
+            ApplicationBootstrap.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        protected override void OnDestroy()
+        {
+            if (_sceneUI != null)
+                _sceneUI.Deinitialize();
+
+            
+
+            base.OnDestroy();
+        }
     }
 
 }

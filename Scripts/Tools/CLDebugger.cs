@@ -14,7 +14,7 @@ namespace IT.CoreLib.Tools
         /// but for now - supress warning here
         /// </summary>
         private const bool DEBUGGER_ENABLED = true;
-        private const bool BOOT_DEBUGGER_ENABLED = false;
+        private const bool BOOT_DEBUGGER_ENABLED = true;
 
         public static void BootLog(string log)
         {

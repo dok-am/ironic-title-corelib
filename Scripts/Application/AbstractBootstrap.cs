@@ -9,8 +9,13 @@ namespace IT.CoreLib.Application
 
     public abstract class AbstractBootstrap : MonoBehaviour, IBootstrap
     {
-        public IBootstrap Parent {  get; protected set; }
+        public event Action<bool> OnPaused;
 
+        public IBootstrap Parent {  get; protected set; }
+        public bool IsPaused => _isPaused;
+
+
+        private bool _isPaused;
         private Dictionary<Type, IService> _services;
         private List<IUpdatable> _updatables;
         private List<IFixedUpdatable> _fixedUpdatables;
@@ -26,6 +31,17 @@ namespace IT.CoreLib.Application
                 return (T)service;
 
             throw new Exception($"[BOOTSTRAP] There is no service of type {typeof(T).Name} in Bootstrap {gameObject.name} ");
+        }
+
+        public virtual void SetPaused(bool paused)
+        {
+            _isPaused = paused;
+            foreach (IService service in _services.Values)
+            {
+                service.OnPaused(paused);
+            }
+
+            OnPaused?.Invoke(paused);
         }
 
         protected T AddService<T>(GameObject servicePrefab = null) where T: IService, new()
@@ -83,7 +99,7 @@ namespace IT.CoreLib.Application
 
         private void Update()
         {
-            if (!Initialized) return;
+            if (!Initialized || _isPaused) return;
 
             foreach (IUpdatable service in _updatables)
             {
@@ -93,7 +109,7 @@ namespace IT.CoreLib.Application
 
         private void FixedUpdate()
         {
-            if (!Initialized) return;
+            if (!Initialized || _isPaused) return;
 
             foreach (IFixedUpdatable service in _fixedUpdatables)
             {
@@ -101,7 +117,7 @@ namespace IT.CoreLib.Application
             }
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (!Initialized) return;
 

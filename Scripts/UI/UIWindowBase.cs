@@ -8,10 +8,10 @@ namespace IT.CoreLib.UI
     {
         public abstract void Initialize(SceneBootstrap scene);
 
-        public abstract void OnBeforeShowWindow();
-        public abstract void OnAfterShowWindow();
-        public abstract void OnBeforeHideWindow();
-        public abstract void OnAfterHideWindow();
+        public virtual void OnBeforeShowWindow() { }
+        public virtual void OnAfterShowWindow() { }
+        public virtual void OnBeforeHideWindow() { }
+        public virtual void OnAfterHideWindow() { }
     }
 
 }
