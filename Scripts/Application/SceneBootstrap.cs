@@ -53,8 +53,6 @@ namespace IT.CoreLib.Application
             if (_sceneUI != null)
                 _sceneUI.Deinitialize();
 
-            
-
             base.OnDestroy();
         }
     }

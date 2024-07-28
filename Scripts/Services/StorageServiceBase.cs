@@ -33,11 +33,6 @@ namespace IT.CoreLib.Services
             }
         }
 
-        public void OnInitialized(IBootstrap bootstrap)
-        {
-            //cool
-        }
-
         public virtual T GetModel(string id)
         {
             if (_storage.TryGetValue(id, out T model))
@@ -51,10 +46,6 @@ namespace IT.CoreLib.Services
             return _storage.Values.ToArray();
         }
 
-        public void Destroy()
-        {
-            //cool
-        }
     }
 
 }

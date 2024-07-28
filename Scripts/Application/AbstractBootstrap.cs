@@ -20,6 +20,8 @@ namespace IT.CoreLib.Application
         private List<IUpdatable> _updatables;
         private List<IFixedUpdatable> _fixedUpdatables;
 
+
+
         /// <summary>
         /// You must set this in children
         /// </summary>
@@ -43,6 +45,8 @@ namespace IT.CoreLib.Application
 
             OnPaused?.Invoke(paused);
         }
+
+
 
         protected T AddService<T>(GameObject servicePrefab = null) where T: IService, new()
         {
@@ -97,6 +101,22 @@ namespace IT.CoreLib.Application
             }
         }
 
+        protected virtual void OnDestroy()
+        {
+            if (!Initialized) return;
+
+            foreach (IService service in _services.Values)
+            {
+                service.Destroy();
+                if (service is MonoBehaviour monoService)
+                {
+                    Destroy(monoService.gameObject);
+                }
+            }
+        }
+
+
+
         private void Update()
         {
             if (!Initialized || _isPaused) return;
@@ -114,20 +134,6 @@ namespace IT.CoreLib.Application
             foreach (IFixedUpdatable service in _fixedUpdatables)
             {
                 service.FixedUpdate(Time.fixedDeltaTime);
-            }
-        }
-
-        protected virtual void OnDestroy()
-        {
-            if (!Initialized) return;
-
-            foreach (IService service in _services.Values)
-            {
-                service.Destroy();
-                if (service is MonoBehaviour monoService)
-                {
-                    Destroy(monoService.gameObject);
-                }
             }
         }
     }

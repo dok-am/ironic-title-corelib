@@ -46,6 +46,8 @@ namespace IT.CoreLib.Application
             }
         }
 
+
+
         public virtual async Task InitializeApplication(ApplicationEntryPoint applicationEP, int redirectSceneIndex)
         {
             CLDebug.BootLog("Initialization begun");
@@ -62,20 +64,13 @@ namespace IT.CoreLib.Application
             await LoadScene(redirectSceneIndex != 0 ? redirectSceneIndex : 1);
         }
 
-        //TODO: Possible problems here, should be changed
-        protected override void InitializeUI(ApplicationUIContainer uiContainer)
-        {
-            _appUIContainer = uiContainer;
-            DontDestroyOnLoad(_appUIContainer);
-            _appUIContainer.Initialize(this);
-        }
-
         public virtual async Task LoadScene(int index)
         {
             CLDebug.BootLog("Begin transition");
 
             await _appUIContainer.UITransition.StartTransitionAsync(false);
 
+            //TODO: Check if it is a correct point to do this
             _appUIContainer.RemoveCurrentSceneUI();
 
             CLDebug.BootLog("Begin loading scene");
@@ -95,6 +90,16 @@ namespace IT.CoreLib.Application
             _appUIContainer.UITransition.FinishTransition();
 
             CLDebug.BootLog("Transition completed");
+        }
+
+
+
+        //TODO: Possible problems here, should be changed
+        protected override void InitializeUI(ApplicationUIContainer uiContainer)
+        {
+            _appUIContainer = uiContainer;
+            DontDestroyOnLoad(_appUIContainer);
+            _appUIContainer.Initialize(this);
         }
 
     }

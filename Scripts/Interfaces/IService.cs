@@ -1,4 +1,3 @@
-using UnityEngine;
 
 namespace IT.CoreLib.Interfaces
 {
