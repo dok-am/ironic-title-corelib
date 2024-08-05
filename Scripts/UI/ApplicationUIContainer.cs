@@ -25,7 +25,7 @@ namespace IT.CoreLib.UI
             if (_currentSceneUI != null)
                 throw new Exception("[UI] ERROR: Previous scene UI wasn't removed");
 
-            _currentSceneUI = Instantiate(prefab.gameObject, _sceneUiContainer).GetComponent<SceneUIBase>();
+            _currentSceneUI = Instantiate(prefab, _sceneUiContainer);
             _currentSceneUI.Initialize(scene, this);
             return _currentSceneUI;
         }

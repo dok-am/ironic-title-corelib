@@ -44,7 +44,7 @@ namespace IT.CoreLib.UI
             T viewItem = GetViewItemFromPool();
             if (viewItem == null)
             {
-                viewItem = Instantiate(_itemPrefab.gameObject, _itemsContainer).GetComponent<T>();
+                viewItem = Instantiate(_itemPrefab, _itemsContainer);
                 _items.Add(viewItem);
             } 
             else

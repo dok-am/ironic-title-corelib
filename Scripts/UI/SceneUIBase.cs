@@ -51,7 +51,7 @@ namespace IT.CoreLib.UI
             if (windowPrefab == null)
                 throw new Exception($"[UI] Can' create window of type {typeof(T).Name}: no prefab available");
 
-            T windowInstance = Instantiate(windowPrefab, transform).GetComponent<T>();
+            T windowInstance = Instantiate(windowPrefab, transform) as T;
             windowInstance.Initialize(_scene);
 
             windowInstance.OnBeforeShowWindow();
