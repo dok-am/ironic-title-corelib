@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 namespace IT.CoreLib.Application
 {
-    public abstract class SceneBootstrap : AbstractBootstrap
+    public abstract class SceneContext : AbstractContext
     {
-        public event Action<SceneBootstrap> OnSceneServicesLoaded;
-        public event Action<SceneBootstrap> OnSceneInitialied;
+        public event Action<SceneContext> OnSceneServicesLoaded;
+        public event Action<SceneContext> OnSceneInitialied;
 
         public SceneUIBase SceneUI => _sceneUI;
 
@@ -19,9 +19,9 @@ namespace IT.CoreLib.Application
         [SerializeField] private SceneUIBase _sceneUIPrefab;
 
 
-        public void InitializeBootstrap(AbstractBootstrap parentBootstrap, ApplicationUIContainer uiContainer)
+        public void InitializeContext(AbstractContext parentContext, ApplicationUIContainer uiContainer)
         {
-            Parent = parentBootstrap;
+            Parent = parentContext;
             InitializeInternal();
 
             InitializeServices();
@@ -38,7 +38,7 @@ namespace IT.CoreLib.Application
         public void ReloadScene()
         {
             //TODO: Should be more abstract?
-            _ = ApplicationBootstrap.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            _ = ApplicationContext.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
 

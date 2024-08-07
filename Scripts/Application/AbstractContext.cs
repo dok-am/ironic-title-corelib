@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace IT.CoreLib.Application
 {
-    public abstract class AbstractBootstrap : MonoBehaviour, IBootstrap
+    public abstract class AbstractContext : MonoBehaviour, IContext
     {
         public event Action<bool> OnPaused;
 
-        public IBootstrap Parent {  get; protected set; }
+        public IContext Parent {  get; protected set; }
         public bool IsPaused => _isPaused;
 
 
@@ -30,7 +30,7 @@ namespace IT.CoreLib.Application
             if (_services.TryGetValue(typeof(T), out var service)) 
                 return (T)service;
 
-            throw new Exception($"[BOOTSTRAP] There is no service of type {typeof(T).Name} in Bootstrap {gameObject.name} ");
+            throw new Exception($"[CONTEXT] There is no service of type {typeof(T).Name} in Context {gameObject.name} ");
         }
 
         public virtual void SetPaused(bool paused)
@@ -48,7 +48,7 @@ namespace IT.CoreLib.Application
         protected T AddService<T>(GameObject servicePrefab = null) where T: IService, new()
         {
             if (_services.ContainsKey(typeof(T)))
-                throw new Exception($"[BOOTSTRAP] Can't add service {typeof(T).Name}, bootstrap {gameObject.name} already has it");
+                throw new Exception($"[CONTEXT] Can't add service {typeof(T).Name}, context {gameObject.name} already has it");
 
             T service;
 
@@ -61,7 +61,7 @@ namespace IT.CoreLib.Application
                 service = Instantiate(servicePrefab, transform).GetComponent<T>();
 
                 if (service == null)
-                    throw new Exception($"[BOOTSTRAP] Can't add service {typeof(T).Name}, prefab is incorrect!");
+                    throw new Exception($"[CONTEXT] Can't add service {typeof(T).Name}, prefab is incorrect!");
             }
 
             

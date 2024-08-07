@@ -31,16 +31,16 @@ namespace IT.CoreLib.Application
 
             SceneManager.LoadScene(0);
 
-            InitializeBootstrap(redirectSceneIndex);
+            InitializeContext(redirectSceneIndex);
         }
 
-        private async void InitializeBootstrap(int redirectSceneIndex)
+        private async void InitializeContext(int redirectSceneIndex)
         {
             await Task.Yield();
 
             CLDebug.BootLog("Bootstrap scene loaded");
 
-            ApplicationBootstrap sceneEP = UnityEngine.Object.FindFirstObjectByType<ApplicationBootstrap>();
+            ApplicationContext sceneEP = UnityEngine.Object.FindFirstObjectByType<ApplicationContext>();
             if (sceneEP == null)
                 throw new Exception("0 scene is not an application bootstrap scene!");
 

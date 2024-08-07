@@ -1,8 +1,8 @@
 namespace IT.CoreLib.Interfaces
 {
-    public interface IBootstrap 
+    public interface IContext 
     {
-        public IBootstrap Parent { get; }
+        public IContext Parent { get; }
         public T GetService<T>() where T : IService;
     }
 }

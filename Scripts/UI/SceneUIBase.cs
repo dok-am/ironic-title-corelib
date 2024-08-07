@@ -16,7 +16,7 @@ namespace IT.CoreLib.UI
         [SerializeField] private List<UIWindowBase> _windowsPrefabs;
 
         private ApplicationUIContainer _appUIContainer;
-        private SceneBootstrap _scene;
+        private SceneContext _scene;
 
         public T ShowWindow<T>() where T : UIWindowBase
         {
@@ -59,7 +59,7 @@ namespace IT.CoreLib.UI
         }
 
 
-        public virtual void Initialize(SceneBootstrap scene, ApplicationUIContainer appUIContainer)
+        public virtual void Initialize(SceneContext scene, ApplicationUIContainer appUIContainer)
         {
             _appUIContainer = appUIContainer;
             _scene = scene;

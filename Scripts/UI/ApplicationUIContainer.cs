@@ -15,12 +15,12 @@ namespace IT.CoreLib.UI
         protected SceneUIBase _currentSceneUI;
 
 
-        public virtual void Initialize(ApplicationBootstrap appBoostrap)
+        public virtual void Initialize(ApplicationContext appBoostrap)
         {
             _sceneUITransition.Initialize();
         }
 
-        public virtual SceneUIBase AddSceneUI(SceneUIBase prefab, SceneBootstrap scene)
+        public virtual SceneUIBase AddSceneUI(SceneUIBase prefab, SceneContext scene)
         {
             if (_currentSceneUI != null)
                 throw new Exception("[UI] ERROR: Previous scene UI wasn't removed");

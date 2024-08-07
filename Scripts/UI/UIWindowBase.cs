@@ -5,7 +5,7 @@ namespace IT.CoreLib.UI
 {
     public abstract class UIWindowBase : MonoBehaviour
     {
-        public abstract void Initialize(SceneBootstrap scene);
+        public abstract void Initialize(SceneContext scene);
 
         public virtual void OnBeforeShowWindow() { }
         public virtual void OnAfterShowWindow() { }

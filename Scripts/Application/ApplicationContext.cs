@@ -7,17 +7,17 @@ using UnityEngine.SceneManagement;
 
 namespace IT.CoreLib.Application
 {
-    public abstract class ApplicationBootstrap : AbstractBootstrap
+    public abstract class ApplicationContext : AbstractContext
     {
-        public SceneBootstrap CurrentScene { get; protected set; }
-        public static ApplicationBootstrap Instance { 
+        public SceneContext CurrentScene { get; protected set; }
+        public static ApplicationContext Instance { 
             get {
 
                 if (_instance == null)
                 {
-                    _instance = FindFirstObjectByType<ApplicationBootstrap>();
+                    _instance = FindFirstObjectByType<ApplicationContext>();
                     if (_instance == null)
-                        throw new Exception("[BOOTSTRAP] There are no ApplicationBootstrap!");
+                        throw new Exception("[CONTEXT] There are no ApplicationContext!");
                 }
 
                 return _instance;
@@ -30,7 +30,7 @@ namespace IT.CoreLib.Application
 
         [SerializeField] private ApplicationUIContainer UIContainerPrefab;
 
-        private static ApplicationBootstrap _instance;
+        private static ApplicationContext _instance;
 
 
         public virtual async Task InitializeApplication(ApplicationEntryPoint applicationEP, int redirectSceneIndex)
@@ -63,11 +63,11 @@ namespace IT.CoreLib.Application
             await Task.Yield();
 
             CLDebug.BootLog("Scene loaded");
-            CurrentScene = FindFirstObjectByType<SceneBootstrap>();
+            CurrentScene = FindFirstObjectByType<SceneContext>();
             if (CurrentScene == null)
-                throw new Exception($"There are no SceneBootstrap on scene {index}");
+                throw new Exception($"There are no SceneContext on scene {index}");
                         
-            CurrentScene.InitializeBootstrap(this, _appUIContainer);
+            CurrentScene.InitializeContext(this, _appUIContainer);
 
             CLDebug.BootLog("Scene initialized");
 
@@ -95,7 +95,7 @@ namespace IT.CoreLib.Application
             if (_instance != this)
             {
                 Destroy(gameObject);
-                throw new Exception("There are more than one application bootstrap!");
+                throw new Exception("There are more than one application context!");
             }
         }
     }
