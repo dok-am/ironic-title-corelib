@@ -1,13 +1,15 @@
 # < Ironic Title > CoreLib 
 > Still WIP!!!
 
-Unity Framework for quick and simple bootstrapping
+Unity Framework for quick and simple game architecture building
 
 ## Basic idea
 This is a universal and simple framework for quick setup of small-scale games architecture. It provides:
 - Entry Point
-- Services holder
+- Contexs as a Service Providers
+- Transitions between scenes
 - UI structure base
+- UI universal classes
 - FSM base with transitional states
 - Some useful interfaces
 - Universal services base like for static data storage
@@ -17,14 +19,14 @@ This is a universal and simple framework for quick setup of small-scale games ar
 Clone this repository as a submodule to your project's Assets folder.
 
 In a project you should have at least two scenes:
-- Bootstrapping scene (0) with an object with component inherited from `ApplicationBootstrap`
-- Main scene (1) with an object with component inherited from `SceneBootstrap`
+- Bootstrapping scene (0) with an object with component inherited from `ApplicationContext`
+- Main scene (1) with an object with component inherited from `SceneContext`
   
-`ApplicationEntryPoint` loading scene 0 and begin initialization progress with boostraps.
-Inside of bootstraps you can implemented services you need on this level (application or scene level)
+`ApplicationEntryPoint` loading scene 0 and begin initialization progress with contexts.
+Inside of contexts you can implemented services you need on this level (application or scene level)
 
 ```c#
-public class GameplaySceneBootstrap : SceneBootstrap
+public class GameplaySceneContext : SceneContext
 {
     [SerializeField] private GameObject _playerPrefab;
 
