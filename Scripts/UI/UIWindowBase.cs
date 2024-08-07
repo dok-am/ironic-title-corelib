@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace IT.CoreLib.UI
 {
-
     public abstract class UIWindowBase : MonoBehaviour
     {
         public abstract void Initialize(SceneBootstrap scene);
@@ -13,5 +12,4 @@ namespace IT.CoreLib.UI
         public virtual void OnBeforeHideWindow() { }
         public virtual void OnAfterHideWindow() { }
     }
-
 }

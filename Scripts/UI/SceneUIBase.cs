@@ -5,35 +5,18 @@ using UnityEngine;
 
 namespace IT.CoreLib.UI
 {
-
     public class SceneUIBase : MonoBehaviour
     {
         public UITransitionBase AppUITransition => _appUIContainer.UITransition;
+
+
+        protected Dictionary<Type, UIWindowBase> _createdWindows;
+
 
         [SerializeField] private List<UIWindowBase> _windowsPrefabs;
 
         private ApplicationUIContainer _appUIContainer;
         private SceneBootstrap _scene;
-
-        protected Dictionary<Type, UIWindowBase> _createdWindows;
-
-        public virtual void Initialize(SceneBootstrap scene, ApplicationUIContainer appUIContainer)
-        {
-            _appUIContainer = appUIContainer;
-            _scene = scene;
-            _createdWindows = new Dictionary<Type, UIWindowBase>();
-        }
-
-        public virtual void Deinitialize()
-        {
-            foreach (UIWindowBase window in _createdWindows.Values)
-            {
-                window.OnBeforeHideWindow();
-                Destroy(window.gameObject);
-            }
-
-            _createdWindows.Clear();
-        }
 
         public T ShowWindow<T>() where T : UIWindowBase
         {
@@ -74,6 +57,24 @@ namespace IT.CoreLib.UI
 
             throw new Exception($"[UI] Can't hide window {typeof(T).Name}: it doesnt' exist!");
         }
-    }
 
+
+        public virtual void Initialize(SceneBootstrap scene, ApplicationUIContainer appUIContainer)
+        {
+            _appUIContainer = appUIContainer;
+            _scene = scene;
+            _createdWindows = new Dictionary<Type, UIWindowBase>();
+        }
+
+        public virtual void Deinitialize()
+        {
+            foreach (UIWindowBase window in _createdWindows.Values)
+            {
+                window.OnBeforeHideWindow();
+                Destroy(window.gameObject);
+            }
+
+            _createdWindows.Clear();
+        }
+    }
 }

@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace IT.CoreLib.Application
 {
-
     public abstract class AbstractBootstrap : MonoBehaviour, IBootstrap
     {
         public event Action<bool> OnPaused;
@@ -19,7 +18,6 @@ namespace IT.CoreLib.Application
         private Dictionary<Type, IService> _services;
         private List<IUpdatable> _updatables;
         private List<IFixedUpdatable> _fixedUpdatables;
-
 
 
         /// <summary>
@@ -47,20 +45,18 @@ namespace IT.CoreLib.Application
         }
 
 
-
         protected T AddService<T>(GameObject servicePrefab = null) where T: IService, new()
         {
             if (_services.ContainsKey(typeof(T)))
-            {
                 throw new Exception($"[BOOTSTRAP] Can't add service {typeof(T).Name}, bootstrap {gameObject.name} already has it");
-            }
 
             T service;
 
             if (servicePrefab == null)
             {
                 service = new T();
-            } else
+            } 
+            else
             {
                 service = Instantiate(servicePrefab, transform).GetComponent<T>();
 
@@ -82,16 +78,17 @@ namespace IT.CoreLib.Application
             return service;
         }
 
+        protected abstract void InitializeServices();
+
+        protected abstract void InitializeUI(ApplicationUIContainer uiContainer);
+
         protected virtual void InitializeInternal()
         {
             Parent = null;
             _services = new Dictionary<Type, IService>();
             _updatables = new List<IUpdatable>();
             _fixedUpdatables = new List<IFixedUpdatable>();
-        }
-
-        protected abstract void InitializeServices();
-        protected abstract void InitializeUI(ApplicationUIContainer uiContainer);
+        }       
 
         protected virtual void OnServicesInitialized()
         {
@@ -103,7 +100,8 @@ namespace IT.CoreLib.Application
 
         protected virtual void OnDestroy()
         {
-            if (!Initialized) return;
+            if (!Initialized) 
+                return;
 
             foreach (IService service in _services.Values)
             {
@@ -116,10 +114,10 @@ namespace IT.CoreLib.Application
         }
 
 
-
         private void Update()
         {
-            if (!Initialized || _isPaused) return;
+            if (!Initialized || _isPaused) 
+                return;
 
             foreach (IUpdatable service in _updatables)
             {
@@ -129,7 +127,8 @@ namespace IT.CoreLib.Application
 
         private void FixedUpdate()
         {
-            if (!Initialized || _isPaused) return;
+            if (!Initialized || _isPaused) 
+                return;
 
             foreach (IFixedUpdatable service in _fixedUpdatables)
             {
@@ -137,5 +136,4 @@ namespace IT.CoreLib.Application
             }
         }
     }
-
 }

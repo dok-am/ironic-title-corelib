@@ -1,8 +1,5 @@
-using UnityEngine;
-
 namespace IT.CoreLib.FSM
 {
-
     public abstract class FSMTransitionState : IFSMState
     {
         protected FSMState _fromState;
@@ -10,6 +7,7 @@ namespace IT.CoreLib.FSM
 
         protected bool _transitionFinished;
         protected bool _statesSwitched;
+
 
         public FSMTransitionState()
         {
@@ -21,6 +19,7 @@ namespace IT.CoreLib.FSM
             _fromState = fromState;
             _toState = toState;
         }
+
 
         public abstract string Name { get; }
 
@@ -63,5 +62,4 @@ namespace IT.CoreLib.FSM
             _toState.OnEnter();
         }
     }
-
 }

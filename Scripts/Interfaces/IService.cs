@@ -1,7 +1,5 @@
-
 namespace IT.CoreLib.Interfaces
 {
-
     public interface IService
     {
         public void Initialize() { }
@@ -9,5 +7,4 @@ namespace IT.CoreLib.Interfaces
         public void Destroy() { }
         public void OnPaused(bool paused) { }
     }
-
 }

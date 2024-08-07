@@ -6,11 +6,16 @@ using UnityEngine.SceneManagement;
 
 namespace IT.CoreLib.Application
 {
-
     public class ApplicationEntryPoint  
     {
-
         private static ApplicationEntryPoint _appEntryPoint;
+
+
+        ApplicationEntryPoint()
+        {
+
+        }
+
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void ApplicationInit()
@@ -18,11 +23,7 @@ namespace IT.CoreLib.Application
             _appEntryPoint = new ApplicationEntryPoint();
             _appEntryPoint.RunApplication();
         }
-
-        ApplicationEntryPoint()
-        {
-
-        }
+        
 
         private void RunApplication()
         {
@@ -47,7 +48,5 @@ namespace IT.CoreLib.Application
 
             CLDebug.BootLog("Application initialization finished");
         }
-
     }
-
 }

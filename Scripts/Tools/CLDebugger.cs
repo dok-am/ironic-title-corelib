@@ -2,12 +2,9 @@ using UnityEngine;
 
 namespace IT.CoreLib.Tools
 {
-
+#pragma warning disable CS0162 // Unreachable code detected
     public static class CLDebug 
     {
-
-#pragma warning disable CS0162 // Unreachable code detected
-
         /// <summary>
         /// Use it to switch on/off logs
         /// TODO: move it somewhere not static,
@@ -15,6 +12,7 @@ namespace IT.CoreLib.Tools
         /// </summary>
         private const bool DEBUGGER_ENABLED = true;
         private const bool BOOT_DEBUGGER_ENABLED = false;
+
 
         public static void BootLog(string log)
         {
@@ -37,9 +35,6 @@ namespace IT.CoreLib.Tools
 
             Debug.Log($"{prefix}{log}");
         }
-
-#pragma warning restore CS0162 // Unreachable code detected
-
     }
-
+#pragma warning restore CS0162 // Unreachable code detected
 }

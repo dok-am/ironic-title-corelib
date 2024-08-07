@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace IT.CoreLib.Services
 {
-
     public abstract class StorageServiceBase<T> : IService where T : IStaticModel
     {
         protected string _pathToStorage;
 
         protected Dictionary<string, T> _storage;
 
+
         /// <summary>
-        /// WARNING: Set _pathToStorage in child constructor
+        /// WARNING: You HAVE TO set _pathToStorage in child constructor
         /// </summary>
         public virtual void Initialize()
         {
@@ -45,7 +45,5 @@ namespace IT.CoreLib.Services
         {
             return _storage.Values.ToArray();
         }
-
     }
-
 }

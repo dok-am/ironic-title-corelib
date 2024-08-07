@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace IT.CoreLib.UI
 {
-
     public abstract class UITransitionBase : MonoBehaviour
     {
         public enum TransitionState
@@ -22,9 +21,9 @@ namespace IT.CoreLib.UI
         public event Action<UITransitionBase> OnTransitionCompleted;
         
         public TransitionState CurrentState => _transitionState;
-        protected TransitionState _transitionState = TransitionState.None;
 
-        [SerializeField] private float _defaultTransitionTime = 0.5f;
+
+        protected TransitionState _transitionState = TransitionState.None;      
 
         protected float _transitionInTime;
         protected float _transitionHoldTime;
@@ -32,6 +31,9 @@ namespace IT.CoreLib.UI
         protected bool _transitionAutoEnd;
 
         protected float _timer;
+
+
+        [SerializeField] private float _defaultTransitionTime = 0.5f;
 
         private Task _awaitTask;
         private TaskCompletionSource<bool> _awaitCompletionSource;
@@ -241,5 +243,4 @@ namespace IT.CoreLib.UI
         #endregion
 
     }
-
 }

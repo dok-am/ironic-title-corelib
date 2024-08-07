@@ -3,6 +3,10 @@ using UnityEngine.EventSystems;
 
 namespace IT.CoreLib.UI
 {
+    /// <summary>
+    /// Drag'n'drop draggable object class
+    /// </summary>
+    /// <typeparam name="T">Drag'n'drop data value type</typeparam>
     [RequireComponent(typeof(RectTransform))]
     [RequireComponent (typeof(CanvasGroup))]
     public abstract class UIDragNDropObject<T> : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
@@ -16,6 +20,7 @@ namespace IT.CoreLib.UI
         private Transform _gridTransform;
         private int _index;
         private bool _isDragging;
+
 
         private static Transform CellEmptyCopy
         {
@@ -31,22 +36,14 @@ namespace IT.CoreLib.UI
         }
         private static GameObject _cellEmptyCopy;
 
-        public abstract T GetValue();
-
-        private void Start()
-        {
-            _rectTransform = GetComponent<RectTransform>();
-            _canvasGroup = GetComponent<CanvasGroup>();
-        }
 
         /// <summary>
-        /// You should run this method in children classs
+        /// Get data from drag'n'drop object
+        /// You should override it in child class
         /// </summary>
-        /// <param name="mainCanvas">Main canvas</param>
-        protected void InitializeDragNDrop(Canvas mainCanvas)
-        {
-            _mainCanvas = mainCanvas;
-        }
+        /// <returns>Data object</returns>
+        public abstract T GetValue();
+                
 
         public void StopDragginForced()
         {
@@ -88,7 +85,21 @@ namespace IT.CoreLib.UI
             if (_isDragging)
                 _rectTransform.anchoredPosition += eventData.delta / _mainCanvas.scaleFactor;
         }
-               
-    }
 
+
+        private void Start()
+        {
+            _rectTransform = GetComponent<RectTransform>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+        }
+
+        /// <summary>
+        /// You should run this method in children classs
+        /// </summary>
+        /// <param name="mainCanvas">Main canvas</param>
+        protected void InitializeDragNDrop(Canvas mainCanvas)
+        {
+            _mainCanvas = mainCanvas;
+        }
+    }
 }

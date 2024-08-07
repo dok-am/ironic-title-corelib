@@ -1,4 +1,3 @@
-
 namespace IT.CoreLib.Interfaces
 {
     /// <summary>
@@ -8,5 +7,4 @@ namespace IT.CoreLib.Interfaces
     {
         public string Id { get; }
     }
-
 }

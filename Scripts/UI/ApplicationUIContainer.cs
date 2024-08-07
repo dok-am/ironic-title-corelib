@@ -4,10 +4,10 @@ using IT.CoreLib.Application;
 
 namespace IT.CoreLib.UI
 {
-
     public class ApplicationUIContainer : MonoBehaviour
     {
         public UITransitionBase UITransition => _sceneUITransition;
+
 
         [SerializeField] protected Transform _sceneUiContainer;
         [SerializeField] protected UITransitionBase _sceneUITransition;
@@ -39,7 +39,5 @@ namespace IT.CoreLib.UI
             Destroy(_currentSceneUI.gameObject);
             _currentSceneUI = null;
         }
-
     }
-
 }

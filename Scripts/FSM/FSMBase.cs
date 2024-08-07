@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace IT.CoreLib.FSM
 {
-
     public class FSMBase
     {
         private List<IFSMState> _statesList;
@@ -11,13 +10,13 @@ namespace IT.CoreLib.FSM
 
         private string _name;
 
+
         public FSMBase(string name, IFSMState defaultState)
         {
             _name = name;
             _statesList = new List<IFSMState>() { defaultState };
             ChangeState(defaultState);
         }
-
 
         public void AddState(IFSMState state)
         {
@@ -49,5 +48,4 @@ namespace IT.CoreLib.FSM
             _currentState.OnUpdate(deltaTime);
         }
     }
-
 }

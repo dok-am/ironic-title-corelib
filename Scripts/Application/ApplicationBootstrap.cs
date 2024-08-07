@@ -7,11 +7,9 @@ using UnityEngine.SceneManagement;
 
 namespace IT.CoreLib.Application
 {
-
     public abstract class ApplicationBootstrap : AbstractBootstrap
     {
-        [SerializeField] ApplicationUIContainer UIContainerPrefab;
-
+        public SceneBootstrap CurrentScene { get; protected set; }
         public static ApplicationBootstrap Instance { 
             get {
 
@@ -25,27 +23,14 @@ namespace IT.CoreLib.Application
                 return _instance;
             } 
         }
-        private static ApplicationBootstrap _instance;
-
-        public SceneBootstrap CurrentScene { get; protected set; }
-
-
+        
+        
         protected ApplicationEntryPoint _appEntryPoint;
         protected ApplicationUIContainer _appUIContainer;
-        
 
-        private void Awake()
-        {
-            if (_instance == null)
-                _instance = this;
+        [SerializeField] private ApplicationUIContainer UIContainerPrefab;
 
-            if (_instance != this)
-            {
-                Destroy(gameObject);
-                throw new Exception("There are more than one application bootstrap!");
-            }
-        }
-
+        private static ApplicationBootstrap _instance;
 
 
         public virtual async Task InitializeApplication(ApplicationEntryPoint applicationEP, int redirectSceneIndex)
@@ -93,8 +78,7 @@ namespace IT.CoreLib.Application
         }
 
 
-
-        //TODO: Possible problems here, should be changed
+        //TODO: Possible problems here?
         protected override void InitializeUI(ApplicationUIContainer uiContainer)
         {
             _appUIContainer = uiContainer;
@@ -102,6 +86,17 @@ namespace IT.CoreLib.Application
             _appUIContainer.Initialize(this);
         }
 
-    }
 
+        private void Awake()
+        {
+            if (_instance == null)
+                _instance = this;
+
+            if (_instance != this)
+            {
+                Destroy(gameObject);
+                throw new Exception("There are more than one application bootstrap!");
+            }
+        }
+    }
 }

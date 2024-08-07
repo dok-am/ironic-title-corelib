@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System;
 
 namespace IT.CoreLib.FSM
 {
-
     public abstract class FSMState : IFSMState
     {
         public string Name => _name;
@@ -19,6 +17,7 @@ namespace IT.CoreLib.FSM
             _name = name;
             _transitions = new List<FSMTransition>();
         }
+
 
         /// <summary>
         /// Adding transition to other state
@@ -52,11 +51,8 @@ namespace IT.CoreLib.FSM
         /// 
         /// State life cycle
         /// 
-
         public abstract void OnEnter();
-
         public abstract void OnUpdate(float deltaTime);
         public abstract void OnExit();
     }
-
 }

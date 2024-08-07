@@ -5,7 +5,10 @@ using UnityEngine.EventSystems;
 
 namespace IT.CoreLib
 {
-
+    /// <summary>
+    /// Drag'n'drop drop target object class
+    /// </summary>
+    /// <typeparam name="T">Drag'n'drop data value type</typeparam>
     public abstract class UIDragNDropTarget<T> : MonoBehaviour, IDropHandler
     {
         public event Action<T> OnValueDropped;
@@ -20,5 +23,4 @@ namespace IT.CoreLib
             }
         }
     }
-
 }

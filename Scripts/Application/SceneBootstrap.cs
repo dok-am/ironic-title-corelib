@@ -1,18 +1,18 @@
 using IT.CoreLib.UI;
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace IT.CoreLib.Application
 {
-
     public abstract class SceneBootstrap : AbstractBootstrap
     {
         public event Action<SceneBootstrap> OnSceneServicesLoaded;
         public event Action<SceneBootstrap> OnSceneInitialied;
 
         public SceneUIBase SceneUI => _sceneUI;
+
+
         private SceneUIBase _sceneUI;
 
         [Header("UI")]
@@ -35,17 +35,18 @@ namespace IT.CoreLib.Application
             OnSceneInitialied?.Invoke(this);
         }
 
+        public void ReloadScene()
+        {
+            //TODO: Should be more abstract?
+            _ = ApplicationBootstrap.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+
         protected abstract void InitializeScene();
 
         protected override void InitializeUI(ApplicationUIContainer uiContainer)
         {
             _sceneUI = uiContainer.AddSceneUI(_sceneUIPrefab, this);
-        }
-
-        public void ReloadScene()
-        {
-            //TODO: Should be more abstract
-            ApplicationBootstrap.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         protected override void OnDestroy()
@@ -56,5 +57,4 @@ namespace IT.CoreLib.Application
             base.OnDestroy();
         }
     }
-
 }
