@@ -8,6 +8,7 @@ namespace IT.CoreLib.UI
     public class SceneUIBase : MonoBehaviour
     {
         public UITransitionBase AppUITransition => _appUIContainer.UITransition;
+        public RectTransform RectTransform => transform as RectTransform;
 
 
         protected Dictionary<Type, UIWindowBase> _createdWindows;
@@ -18,10 +19,14 @@ namespace IT.CoreLib.UI
         private ApplicationUIContainer _appUIContainer;
         private SceneContext _scene;
 
-        public T ShowWindow<T>() where T : UIWindowBase
+
+        public T ShowWindow<T>(IWindowData data = null) where T : UIWindowBase
         {
             if (_createdWindows.TryGetValue(typeof(T), out var window))
             {
+                if (data != null)
+                    window.UpdateData(data);
+
                 window.OnBeforeShowWindow();
                 //TODO: add transition
                 window.gameObject.SetActive(true);
@@ -37,10 +42,10 @@ namespace IT.CoreLib.UI
             T windowInstance = Instantiate(windowPrefab, transform) as T;
             windowInstance.Initialize(_scene);
 
-            windowInstance.OnBeforeShowWindow();
             //TODO: and transition here
             _createdWindows.Add(typeof(T), windowInstance);
-            windowInstance.OnAfterShowWindow();
+
+            ShowWindow<T>(data);
 
             return windowInstance;
         }
@@ -57,7 +62,6 @@ namespace IT.CoreLib.UI
 
             throw new Exception($"[UI] Can't hide window {typeof(T).Name}: it doesnt' exist!");
         }
-
 
         public virtual void Initialize(SceneContext scene, ApplicationUIContainer appUIContainer)
         {
