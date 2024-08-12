@@ -8,7 +8,7 @@ namespace IT.CoreLib.Application
     public abstract class SceneContext : AbstractContext
     {
         public event Action<SceneContext> OnSceneServicesLoaded;
-        public event Action<SceneContext> OnSceneInitialied;
+        public event Action<SceneContext> OnSceneInitialized;
 
         public SceneUIBase SceneUI => _sceneUI;
 
@@ -32,15 +32,8 @@ namespace IT.CoreLib.Application
             InitializeScene();
             
             Initialized = true;
-            OnSceneInitialied?.Invoke(this);
+            OnSceneInitialized?.Invoke(this);
         }
-
-        public void ReloadScene()
-        {
-            //TODO: Make request
-            //_ = ApplicationContext.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-
 
         protected abstract void InitializeScene();
 

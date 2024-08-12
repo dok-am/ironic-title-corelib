@@ -80,6 +80,11 @@ namespace IT.CoreLib.Application
             CLDebug.BootLog("Transition completed");
         }
 
+        public void ReloadCurrentScene()
+        {
+            _ = LoadScene(SceneManager.GetActiveScene().name);
+        }
+
 
         //TODO: Possible problems here?
         protected override void InitializeUI(ApplicationUIContainer uiContainer)
