@@ -28,12 +28,13 @@ namespace IT.CoreLib.Application
         protected ApplicationEntryPoint _appEntryPoint;
         protected ApplicationUIContainer _appUIContainer;
 
-        [SerializeField] private ApplicationUIContainer UIContainerPrefab;
+        [SerializeField] private ApplicationUIContainer _UIContainerPrefab;
+        [SerializeField] private string _defaultSceneName;
 
         private static ApplicationContext _instance;
 
 
-        public virtual async Task InitializeApplication(ApplicationEntryPoint applicationEP, int redirectSceneIndex)
+        public virtual async Task InitializeApplication(ApplicationEntryPoint applicationEP, string redirectSceneName)
         {
             CLDebug.BootLog("Initialization begun");
 
@@ -44,12 +45,12 @@ namespace IT.CoreLib.Application
             InitializeInternal();
             InitializeServices();
             OnServicesInitialized();
-            InitializeUI(Instantiate(UIContainerPrefab));
+            InitializeUI(Instantiate(_UIContainerPrefab));
 
-            await LoadScene(redirectSceneIndex != 0 ? redirectSceneIndex : 1);
+            await LoadScene(redirectSceneName == null ? redirectSceneName : _defaultSceneName);
         }
 
-        public virtual async Task LoadScene(int index)
+        public virtual async Task LoadScene(string name)
         {
             CLDebug.BootLog("Begin transition");
 
@@ -58,14 +59,16 @@ namespace IT.CoreLib.Application
             //TODO: Check if it is a correct point to do this
             _appUIContainer.RemoveCurrentSceneUI();
 
+            await SceneManager.LoadSceneAsync(0);
+
             CLDebug.BootLog("Begin loading scene");
-            await SceneManager.LoadSceneAsync(index);
+            await SceneManager.LoadSceneAsync(name);
             await Task.Yield();
 
             CLDebug.BootLog("Scene loaded");
             CurrentScene = FindFirstObjectByType<SceneContext>();
             if (CurrentScene == null)
-                throw new Exception($"There are no SceneContext on scene {index}");
+                throw new Exception($"There are no SceneContext on scene {name}");
                         
             CurrentScene.InitializeContext(this, _appUIContainer);
 
@@ -95,7 +98,6 @@ namespace IT.CoreLib.Application
             if (_instance != this)
             {
                 Destroy(gameObject);
-                throw new Exception("There are more than one application context!");
             }
         }
     }

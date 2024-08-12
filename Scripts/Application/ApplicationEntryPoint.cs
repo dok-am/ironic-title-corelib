@@ -27,14 +27,14 @@ namespace IT.CoreLib.Application
 
         private void RunApplication()
         {
-            int redirectSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            string redirectSceneName = SceneManager.GetActiveScene().name;
 
             SceneManager.LoadScene(0);
 
-            InitializeContext(redirectSceneIndex);
+            InitializeContext(redirectSceneName);
         }
 
-        private async void InitializeContext(int redirectSceneIndex)
+        private async void InitializeContext(string redirectSceneName)
         {
             await Task.Yield();
 
@@ -44,7 +44,7 @@ namespace IT.CoreLib.Application
             if (sceneEP == null)
                 throw new Exception("0 scene is not an application bootstrap scene!");
 
-            await sceneEP.InitializeApplication(this, redirectSceneIndex);
+            await sceneEP.InitializeApplication(this, redirectSceneName);
 
             CLDebug.BootLog("Application initialization finished");
         }

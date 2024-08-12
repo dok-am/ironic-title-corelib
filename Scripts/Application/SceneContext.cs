@@ -37,8 +37,8 @@ namespace IT.CoreLib.Application
 
         public void ReloadScene()
         {
-            //TODO: Should be more abstract?
-            _ = ApplicationContext.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            //TODO: Make request
+            //_ = ApplicationContext.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
 
