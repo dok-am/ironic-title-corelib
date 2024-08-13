@@ -42,7 +42,6 @@ namespace IT.CoreLib.Application
             _instance = this;
             DontDestroyOnLoad(gameObject);
 
-            InitializeInternal();
             InitializeServices();
             OnServicesInitialized();
             InitializeUI(Instantiate(_UIContainerPrefab));

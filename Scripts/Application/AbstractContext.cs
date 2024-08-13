@@ -14,10 +14,15 @@ namespace IT.CoreLib.Application
         public bool IsPaused => _isPaused;
 
 
+        [Header("Binders")]
+        [SerializeField] private SceneBinderBase[] _sceneBinders;
+
+
         private bool _isPaused;
-        private Dictionary<Type, IService> _services;
-        private List<IUpdatable> _updatables;
-        private List<IFixedUpdatable> _fixedUpdatables;
+        private Dictionary<Type, IService> _services = new();
+        private Dictionary<Type, ISceneBinder> _sceneBindersDict = new();
+        private List<IUpdatable> _updatables = new();
+        private List<IFixedUpdatable> _fixedUpdatables = new();
 
 
         /// <summary>
@@ -33,6 +38,14 @@ namespace IT.CoreLib.Application
             throw new Exception($"[CONTEXT] There is no service of type {typeof(T).Name} in Context {gameObject.name} ");
         }
 
+        public T GetSceneBinder<T>() where T : ISceneBinder
+        {
+            if (_sceneBindersDict.TryGetValue(typeof(T), out var binder))
+                return (T)binder;
+
+            throw new Exception($"[CONTEXT] There is no scene binder of type {typeof(T).Name} in Context {gameObject.name} ");
+        }
+
         public virtual void SetPaused(bool paused)
         {
             _isPaused = paused;
@@ -45,26 +58,12 @@ namespace IT.CoreLib.Application
         }
 
 
-        protected T AddService<T>(GameObject servicePrefab = null) where T: IService, new()
+        protected T AddService<T>() where T: IService, new()
         {
             if (_services.ContainsKey(typeof(T)))
                 throw new Exception($"[CONTEXT] Can't add service {typeof(T).Name}, context {gameObject.name} already has it");
 
-            T service;
-
-            if (servicePrefab == null)
-            {
-                service = new T();
-            } 
-            else
-            {
-                service = Instantiate(servicePrefab, transform).GetComponent<T>();
-
-                if (service == null)
-                    throw new Exception($"[CONTEXT] Can't add service {typeof(T).Name}, prefab is incorrect!");
-            }
-
-            
+            T service = new T();      
             service.Initialize();
 
             _services.Add(typeof(T), service);
@@ -80,18 +79,19 @@ namespace IT.CoreLib.Application
 
         protected abstract void InitializeServices();
 
-        protected abstract void InitializeUI(ApplicationUIContainer uiContainer);
-
-        protected virtual void InitializeInternal()
-        {
-            Parent = null;
-            _services = new Dictionary<Type, IService>();
-            _updatables = new List<IUpdatable>();
-            _fixedUpdatables = new List<IFixedUpdatable>();
-        }       
+        protected abstract void InitializeUI(ApplicationUIContainer uiContainer);     
 
         protected virtual void OnServicesInitialized()
         {
+            if (_sceneBinders != null)
+            {
+                foreach (SceneBinderBase sceneBinder in _sceneBinders)
+                {
+                    sceneBinder.Bind(this);
+                    _sceneBindersDict.Add(sceneBinder.GetType(), sceneBinder);
+                }
+            }
+
             foreach (IService service in _services.Values)
             {
                 service.OnInitialized(this);
@@ -109,6 +109,14 @@ namespace IT.CoreLib.Application
                 if (service is MonoBehaviour monoService)
                 {
                     Destroy(monoService.gameObject);
+                }
+            }
+
+            if (_sceneBinders != null)
+            {
+                foreach (SceneBinderBase sceneBinder in _sceneBinders)
+                {
+                    sceneBinder.Unbind(this);
                 }
             }
         }

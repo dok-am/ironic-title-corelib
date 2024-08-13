@@ -22,7 +22,6 @@ namespace IT.CoreLib.Application
         public void InitializeContext(AbstractContext parentContext, ApplicationUIContainer uiContainer)
         {
             Parent = parentContext;
-            InitializeInternal();
 
             InitializeServices();
             OnServicesInitialized();

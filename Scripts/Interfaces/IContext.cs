@@ -4,5 +4,6 @@ namespace IT.CoreLib.Interfaces
     {
         public IContext Parent { get; }
         public T GetService<T>() where T : IService;
+        public T GetSceneBinder<T>() where T : ISceneBinder;
     }
 }
