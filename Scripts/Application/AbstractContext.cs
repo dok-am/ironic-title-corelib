@@ -14,13 +14,8 @@ namespace IT.CoreLib.Application
         public bool IsPaused => _isPaused;
 
 
-        [Header("Binders")]
-        [SerializeField] private SceneBinderBase[] _sceneBinders;
-
-
         private bool _isPaused;
         private Dictionary<Type, IService> _services = new();
-        private Dictionary<Type, ISceneBinder> _sceneBindersDict = new();
         private List<IUpdatable> _updatables = new();
         private List<IFixedUpdatable> _fixedUpdatables = new();
 
@@ -36,15 +31,7 @@ namespace IT.CoreLib.Application
                 return (T)service;
 
             throw new Exception($"[CONTEXT] There is no service of type {typeof(T).Name} in Context {gameObject.name} ");
-        }
-
-        public T GetSceneBinder<T>() where T : ISceneBinder
-        {
-            if (_sceneBindersDict.TryGetValue(typeof(T), out var binder))
-                return (T)binder;
-
-            throw new Exception($"[CONTEXT] There is no scene binder of type {typeof(T).Name} in Context {gameObject.name} ");
-        }
+        }       
 
         public virtual void SetPaused(bool paused)
         {
@@ -83,15 +70,6 @@ namespace IT.CoreLib.Application
 
         protected virtual void OnServicesInitialized()
         {
-            if (_sceneBinders != null)
-            {
-                foreach (SceneBinderBase sceneBinder in _sceneBinders)
-                {
-                    sceneBinder.Bind(this);
-                    _sceneBindersDict.Add(sceneBinder.GetType(), sceneBinder);
-                }
-            }
-
             foreach (IService service in _services.Values)
             {
                 service.OnInitialized(this);
@@ -109,14 +87,6 @@ namespace IT.CoreLib.Application
                 if (service is MonoBehaviour monoService)
                 {
                     Destroy(monoService.gameObject);
-                }
-            }
-
-            if (_sceneBinders != null)
-            {
-                foreach (SceneBinderBase sceneBinder in _sceneBinders)
-                {
-                    sceneBinder.Unbind(this);
                 }
             }
         }

@@ -12,9 +12,9 @@ namespace IT.CoreLib.Application
         private List<IFixedUpdatable> _fixedUpdatableManagers = new();
 
 
-        public abstract void Bind(IContext context);
+        public abstract void Bind(SceneContext context);
 
-        public virtual void Unbind(IContext context)
+        public virtual void Unbind(SceneContext context)
         {
             foreach (var manager in _managers.Values)
             {
