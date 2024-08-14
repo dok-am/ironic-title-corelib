@@ -9,6 +9,7 @@ namespace IT.CoreLib.Application
     public abstract class SceneContext : AbstractContext
     {
         public event Action<SceneContext> OnSceneServicesLoaded;
+        public event Action<SceneContext> OnBindersInitialized;
         public event Action<SceneContext> OnSceneInitialized;
 
         public SceneUIBase SceneUI => _sceneUI;
@@ -33,8 +34,10 @@ namespace IT.CoreLib.Application
             OnSceneServicesLoaded?.Invoke(this);
 
             InitializeUI(uiContainer);
+            InitializeBinders();
+            OnBindersInitialized?.Invoke(this);
+
             InitializeScene();
-            
             Initialized = true;
             OnSceneInitialized?.Invoke(this);
         }
@@ -55,7 +58,7 @@ namespace IT.CoreLib.Application
             _sceneUI = uiContainer.AddSceneUI(_sceneUIPrefab, this);
         }
 
-        protected override void OnServicesInitialized()
+        protected virtual void InitializeBinders()
         {
             if (_sceneBinders != null)
             {
@@ -65,8 +68,6 @@ namespace IT.CoreLib.Application
                     _sceneBindersDict.Add(sceneBinder.GetType(), sceneBinder);
                 }
             }
-
-            base.OnServicesInitialized();
         }
 
         protected override void OnDestroy()
