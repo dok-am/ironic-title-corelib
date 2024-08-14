@@ -74,7 +74,6 @@ namespace IT.CoreLib.UI
         {
             foreach (UIWindowBase window in _createdWindows.Values)
             {
-                window.OnBeforeHideWindow();
                 Destroy(window.gameObject);
             }
 
