@@ -55,7 +55,6 @@ namespace IT.CoreLib.Application
 
             await _appUIContainer.UITransition.StartTransitionAsync(false);
 
-            //TODO: Check if it is a correct point to do this
             _appUIContainer.RemoveCurrentSceneUI();
 
             await SceneManager.LoadSceneAsync(0);
@@ -85,7 +84,6 @@ namespace IT.CoreLib.Application
         }
 
 
-        //TODO: Possible problems here?
         protected override void InitializeUI(ApplicationUIContainer uiContainer)
         {
             _appUIContainer = uiContainer;
