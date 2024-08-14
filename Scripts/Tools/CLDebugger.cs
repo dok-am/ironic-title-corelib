@@ -1,22 +1,23 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace IT.CoreLib.Tools
 {
 #pragma warning disable CS0162 // Unreachable code detected
+    [InitializeOnLoad]
     public static class CLDebug 
     {
-        /// <summary>
-        /// Use it to switch on/off logs
-        /// TODO: move it somewhere not static,
-        /// but for now - supress warning here
-        /// </summary>
-        private const bool DEBUGGER_ENABLED = true;
-        private const bool BOOT_DEBUGGER_ENABLED = false;
+        public const string DEBUGGER_LOG_KEY = "CLDEBUGGER_LOG_ENABLED";
+        public const string DEBUGGER_BOOT_LOG_KEY = "CLDEBUGGER_BOOT_LOG_ENABLED";
+
+
+        private static bool IsDebuggerEnabled => PlayerPrefs.GetInt(CLDebug.DEBUGGER_LOG_KEY) != 0;
+        private static bool IsBootDebuggerEnabled => PlayerPrefs.GetInt(CLDebug.DEBUGGER_BOOT_LOG_KEY) != 0;
 
 
         public static void BootLog(string log)
         {
-            if (!BOOT_DEBUGGER_ENABLED)
+            if (!IsBootDebuggerEnabled)
                 return;
 
 
@@ -26,7 +27,7 @@ namespace IT.CoreLib.Tools
 
         public static void Log(string log, string section = null, string color = "white")
         {
-            if (!DEBUGGER_ENABLED)
+            if (!IsDebuggerEnabled)
                 return;
 
             string prefix = "";

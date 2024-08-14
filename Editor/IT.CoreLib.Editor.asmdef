@@ -1,0 +1,18 @@
+{
+    "name": "IT.CoreLib.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:eabd8fb1ae4cb43459a5ae49e9b5c119"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
