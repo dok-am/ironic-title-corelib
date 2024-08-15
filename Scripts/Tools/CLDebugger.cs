@@ -32,7 +32,7 @@ namespace IT.CoreLib.Tools
 
             string prefix = "";
             if (section != null)
-                prefix += $"<color=orange><b>[{section}]</b></color> ";
+                prefix += $"<color={color}><b>[{section}]</b></color> ";
 
             Debug.Log($"{prefix}{log}");
         }
