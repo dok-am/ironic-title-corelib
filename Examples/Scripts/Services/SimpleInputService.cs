@@ -8,9 +8,15 @@ namespace IT.CoreLib.Examples.Services
 {
     public class SimpleInputService : IService, IUpdatable
     {
+        public enum InputState
+        {
+            Gameplay = 0,
+            Dialogue
+        }
+
         public event Action OnUsePressed;
         public event Action OnMenuPressed;
-
+        public event Action OnSkipPressed;
 
         public Vector2 MoveValue { get; private set; }
 
@@ -19,6 +25,7 @@ namespace IT.CoreLib.Examples.Services
         private InputAction _useAction;
         private InputAction _menuAction;
 
+        private InputState _inputState;
         private bool _isPaused;
 
 
@@ -30,6 +37,7 @@ namespace IT.CoreLib.Examples.Services
 
             _useAction.started += UsePressed;
             _menuAction.started += MenuPressed;
+            _inputState = InputState.Gameplay;
         }
 
         public void OnPaused(bool paused)
@@ -47,7 +55,15 @@ namespace IT.CoreLib.Examples.Services
 
         public void Update(float dt)
         {
-            MoveValue = _moveAction.IsPressed() ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+            if (_inputState == InputState.Gameplay && _moveAction.IsPressed())
+                MoveValue = _moveAction.ReadValue<Vector2>();
+            else
+                MoveValue = Vector2.zero;
+        }
+
+        public void SetInputState(InputState state)
+        {
+            _inputState = state;
         }
 
 
@@ -56,7 +72,10 @@ namespace IT.CoreLib.Examples.Services
             if (_isPaused)
                 return;
 
-            OnUsePressed?.Invoke();
+            if (_inputState == InputState.Gameplay)
+                OnUsePressed?.Invoke();
+            else if (_inputState == InputState.Dialogue)
+                OnSkipPressed?.Invoke();
         }
 
         private void MenuPressed(InputAction.CallbackContext context)

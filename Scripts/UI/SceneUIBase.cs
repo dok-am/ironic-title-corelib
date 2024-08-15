@@ -24,6 +24,9 @@ namespace IT.CoreLib.UI
         {
             if (_createdWindows.TryGetValue(typeof(T), out var window))
             {
+                if (window.gameObject.activeSelf)
+                    window.OnBeforeHideWindow();
+
                 if (data != null)
                     window.UpdateData(data);
 
