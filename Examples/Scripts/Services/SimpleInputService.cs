@@ -17,6 +17,7 @@ namespace IT.CoreLib.Examples.Services
         public event Action OnUsePressed;
         public event Action OnMenuPressed;
         public event Action OnSkipPressed;
+        public event Action OnQuestsPressed;
 
         public Vector2 MoveValue { get; private set; }
 
@@ -24,6 +25,7 @@ namespace IT.CoreLib.Examples.Services
         private InputAction _moveAction;
         private InputAction _useAction;
         private InputAction _menuAction;
+        private InputAction _questAction;
 
         private InputState _inputState;
         private bool _isPaused;
@@ -34,9 +36,11 @@ namespace IT.CoreLib.Examples.Services
             _moveAction = InputSystem.actions.FindAction("Move");
             _useAction = InputSystem.actions.FindAction("Use");
             _menuAction = InputSystem.actions.FindAction("Menu");
+            _questAction = InputSystem.actions.FindAction("Quests");
 
             _useAction.started += UsePressed;
             _menuAction.started += MenuPressed;
+            _questAction.started += QuestsPressed;
             _inputState = InputState.Gameplay;
         }
 
@@ -81,6 +85,14 @@ namespace IT.CoreLib.Examples.Services
         private void MenuPressed(InputAction.CallbackContext context)
         {
             OnMenuPressed?.Invoke();
+        }
+
+        private void QuestsPressed(InputAction.CallbackContext obj)
+        {
+            if (_isPaused || _inputState == InputState.Dialogue)
+                return;
+
+            OnQuestsPressed?.Invoke();
         }
     }
 }
