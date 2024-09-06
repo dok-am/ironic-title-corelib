@@ -8,12 +8,19 @@ This is a universal and simple framework for quick setup of small-scale games ar
 - Entry Point
 - Contexs as a Service Providers
 - Transitions between scenes
+- Simple scene bindings
 - UI structure base
 - UI universal classes
 - FSM base with transitional states
 - Some useful interfaces
 - Universal services base like for static data storage
 - Anything I'll consider useful and universal
+
+So, architecturally there are few layers:
+- Models layer - *Services*
+- Data layer - *Providers*, *Services*
+- Binding layer - *SceneBinders*, *Managers*, *SceneUI*
+- View layer - whatever happens in MonoBehaviours
 
 ## How to use
 Clone this repository as a submodule to your project's Assets folder.
@@ -43,6 +50,114 @@ public class GameplaySceneContext : SceneContext
     {
         _player = Instantiate(_playerPrefab);
         _player.GetComponent<PlayerMoveController>().Initialize(GetService<InputService>());
+    }
+}
+```
+
+Every `SceneContext` has a list of `SceneBinderBase`, which you can implement to bind your services to GameObjects.
+`SceneBinderBase` has a set of `IManager`s, which can be used to hadle bindings and do the MonoBeh managing stuff. Also, you can use `IUpdatable` and `IFixedUpdatable` interfaces in Managers, to get Unity's ticking
+
+```c#
+public class SceneBinder : SceneBinderBase
+{
+    [Header("Prefabs")]
+    [SerializeField] private PlayerController _playerPrefab;
+
+    private PlayerManager _playerManager;
+
+    public override void Bind(IContext context)
+    {
+         _playerManager = new PlayerManager(_playerPrefab,
+            context.GetService<PlayerService>(),
+            context.GetService<PlayerInputService>(),
+            _spawnPointsManager);
+
+        AddManager(_playerManager);
+    }
+
+    public override void Unbind(IContext context)
+    {
+        //If your bindings happens right in the Binder, you can unbind them here
+        base.Unbind(context);
+    }
+}
+```
+```c#
+public class PlayerManager : IManager, IUpdatable
+{
+    public event Action<IPlayerInstance> OnPlayerSpawned;
+
+
+    private PlayerController _playerPrefab;
+    private PlayerService _playerService;
+    private PlayerInputService _playerInputService;
+    private PlayerController _playerInstance;
+    private SpawnPointsManager _spawnPointsManager;
+
+
+    public PlayerManager(PlayerController playerPrefab, 
+        PlayerService playerService, 
+        PlayerInputService inputService, 
+        SpawnPointsManager spawnPointsManager)
+    {
+        _playerPrefab = playerPrefab;
+        _playerService = playerService;
+        _playerInputService = inputService;
+        _spawnPointsManager = spawnPointsManager;
+
+        //Binding to service
+        _playerService.OnPlayerDied += Die;
+        _playerService.RequestRespawnPlayer += RespawnPlayer;
+        _playerService.RequestPlayerInstance += PlayerInstance;
+    }
+
+    public void Unbind()
+    {
+        //Unbinding from service
+        _playerService.OnPlayerDied -= Die;
+        _playerService.RequestRespawnPlayer -= RespawnPlayer;
+        _playerService.RequestPlayerInstance -= PlayerInstance;
+    }
+
+    public IPlayerInstance PlayerInstance() => _playerInstance;
+
+    public void RespawnPlayer(ICharacterData characterData)
+    {
+        if (_playerInstance != null)
+            DestroyPlayer();
+
+        _playerInstance = GameObject.Instantiate(_playerPrefab, 
+            _spawnPointsManager.PlayerSpawnPoint.position,
+            Quaternion.identity)
+            .GetComponent<PlayerController>();
+
+        if (_playerInstance == null)
+            throw new Exception("[PLAYER] Player's prefab is wrong!");
+
+        _playerInstance.Initialize(_playerService, characterData);
+        OnPlayerSpawned?.Invoke(_playerInstance);
+    }      
+
+    public void Die()
+    {
+        DestroyPlayer();
+    }
+
+    public void Update(float dt)
+    {
+        if (_playerInstance == null)
+            return;
+
+        _playerInstance.UpdateInput(_playerInputService.MoveValue, _playerInputService.RotateValue);
+    }
+
+
+    private void DestroyPlayer()
+    {
+        if (_playerInstance != null)
+            GameObject.Destroy(_playerInstance.gameObject);
+
+        _playerInstance = null;
     }
 }
 ```
