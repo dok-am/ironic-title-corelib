@@ -1,9 +1,12 @@
+using Cysharp.Threading.Tasks;
+using IT.CoreLib.Interfaces;
 using IT.CoreLib.Tools;
 using IT.CoreLib.UI;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VContainer.Unity;
 
 namespace IT.CoreLib.Application
 {
@@ -34,7 +37,7 @@ namespace IT.CoreLib.Application
         private static ApplicationContext _instance;
 
 
-        public virtual async Task InitializeApplication(ApplicationEntryPoint applicationEP, string redirectSceneName)
+        public virtual async UniTask InitializeApplication(ApplicationEntryPoint applicationEP, string redirectSceneName)
         {
             CLDebug.BootLog("Initialization begun");
 
@@ -46,49 +49,93 @@ namespace IT.CoreLib.Application
             OnServicesInitialized();
             InitializeUI(Instantiate(_UIContainerPrefab));
 
-            await LoadScene(redirectSceneName == null ? redirectSceneName : _defaultSceneName);
+            await LoadScene(redirectSceneName != null ? redirectSceneName : _defaultSceneName, null);
         }
 
-        public virtual async Task LoadScene(string name)
+        public async UniTask LoadScene(string name, ISceneContextInputParameters inputParameters)
         {
-            CLDebug.BootLog("Begin transition");
+            CLDebug.BootLog($"Begin loading scene: {name}");
 
             await _appUIContainer.UITransition.StartTransitionAsync(false);
 
-            _appUIContainer.RemoveCurrentSceneUI();
+            if (CurrentScene != null)
+                _appUIContainer.RemoveSceneUI(CurrentScene);
 
             await SceneManager.LoadSceneAsync(0);
-
-            CLDebug.BootLog("Begin loading scene");
             await SceneManager.LoadSceneAsync(name);
-            await Task.Yield();
+            await UniTask.Yield();
 
-            CLDebug.BootLog("Scene loaded");
-            CurrentScene = FindFirstObjectByType<SceneContext>();
-            if (CurrentScene == null)
-                throw new Exception($"There are no SceneContext on scene {name}");
-                        
-            CurrentScene.InitializeContext(this, _appUIContainer);
+            CLDebug.BootLog($"Scene loaded: {name}");
 
-            CLDebug.BootLog("Scene initialized");
+            CurrentScene = await InitializeLoadedSceneContext(name, this, inputParameters);
 
             Initialized = true;
             _appUIContainer.UITransition.FinishTransition();
 
-            CLDebug.BootLog("Transition completed");
+            CLDebug.BootLog($"Scene initialized: {name}");
         }
 
-        public void ReloadCurrentScene()
+        public async UniTask LoadChildScene(string name, SceneContext parent, ISceneContextInputParameters inputParameters)
         {
-            _ = LoadScene(SceneManager.GetActiveScene().name);
+            CLDebug.BootLog($"Begin adding scene: {name}");
+
+            using (LifetimeScope.EnqueueParent(parent.SceneScope))
+            {
+                await SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
+                await UniTask.Yield();
+
+                CLDebug.BootLog($"Scene added: {name}");
+
+                await InitializeLoadedSceneContext(name, parent, inputParameters);
+            }
+
+            CLDebug.BootLog($"Scene initialized: {name}");
         }
 
+        public async UniTask UnloadChildScene(string name)
+        {
+            await SceneManager.UnloadSceneAsync(name);
+            CLDebug.BootLog($"Scene unloaded: {name}");
+        }
+
+        
 
         protected override void InitializeUI(ApplicationUIContainer uiContainer)
         {
             _appUIContainer = uiContainer;
             DontDestroyOnLoad(_appUIContainer);
             _appUIContainer.Initialize(this);
+        }
+
+
+        private async UniTask<SceneContext> InitializeLoadedSceneContext(string name,
+            AbstractContext parent,
+            ISceneContextInputParameters inputParameters)
+        {
+            Scene scene = SceneManager.GetSceneByName(name);
+            GameObject[] rootObjects = scene.GetRootGameObjects();
+            SceneContext sceneContext = null;
+            foreach (var rootObject in rootObjects)
+            {
+                sceneContext = rootObject.GetComponent<SceneContext>();
+                if (sceneContext != null)
+                    break;
+            }
+
+            if (sceneContext == null)
+                throw new Exception($"[BOOT] Can't find SceneContext on scene {name}");
+
+            if (sceneContext.DefaultSubscenes != null)
+            {
+                foreach (string subscene in sceneContext.DefaultSubscenes)
+                {
+                    await LoadChildScene(subscene, sceneContext, inputParameters);
+                }
+            }
+
+            sceneContext.InitializeContext(parent, _appUIContainer, inputParameters);
+
+            return sceneContext;
         }
 
 

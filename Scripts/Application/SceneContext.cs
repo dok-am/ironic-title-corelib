@@ -2,7 +2,9 @@ using IT.CoreLib.Interfaces;
 using IT.CoreLib.UI;
 using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
+using VContainer.Unity;
 
 namespace IT.CoreLib.Application
 {
@@ -13,21 +15,31 @@ namespace IT.CoreLib.Application
         public event Action<SceneContext> OnSceneInitialized;
 
         public SceneUIBase SceneUI => _sceneUI;
+        public LifetimeScope SceneScope => _sceneScope;
+        public string[] DefaultSubscenes => _defaultSubscenes;
 
+
+        protected ISceneContextInputParameters _inputParameters;
+
+        [Header("DI Container")]
+        [SerializeField, Required] private LifetimeScope _sceneScope;
+        [Header("UI")]
+        [SerializeField] private SceneUIBase _sceneUIPrefab;
+        [Header("Structure")]
+        [SerializeField] private string[] _defaultSubscenes;
+        [Header("Binders")]
+        [SerializeField] private SceneBinderBase[] _sceneBinders;
 
         private SceneUIBase _sceneUI;
         private Dictionary<Type, ISceneBinder> _sceneBindersDict = new();
 
-        [Header("UI")]
-        [SerializeField] private SceneUIBase _sceneUIPrefab;
-        [Header("Binders")]
-        [SerializeField] private SceneBinderBase[] _sceneBinders;
 
-
-
-        public void InitializeContext(AbstractContext parentContext, ApplicationUIContainer uiContainer)
+        public void InitializeContext(AbstractContext parentContext, 
+            ApplicationUIContainer uiContainer,
+            ISceneContextInputParameters inputParameters)
         {
             Parent = parentContext;
+            _inputParameters = inputParameters;
 
             InitializeServices();
             OnServicesInitialized();
@@ -55,7 +67,8 @@ namespace IT.CoreLib.Application
 
         protected override void InitializeUI(ApplicationUIContainer uiContainer)
         {
-            _sceneUI = uiContainer.AddSceneUI(_sceneUIPrefab, this);
+            if (_sceneUIPrefab != null)
+                _sceneUI = uiContainer.AddSceneUI(_sceneUIPrefab, this);
         }
 
         protected virtual void InitializeBinders()

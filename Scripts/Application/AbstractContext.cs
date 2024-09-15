@@ -44,6 +44,14 @@ namespace IT.CoreLib.Application
             OnPaused?.Invoke(paused);
         }
 
+        public ApplicationContext GetApplicationContext()
+        {
+            if (Parent is ApplicationContext appContext)
+                return appContext;
+
+            return Parent.GetApplicationContext();
+        }
+
 
         protected T AddService<T>() where T: IService, new()
         {
