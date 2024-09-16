@@ -115,23 +115,25 @@ namespace IT.CoreLib.Application
 
         private void Update()
         {
-            if (!Initialized || _isPaused) 
+            if (!Initialized) 
                 return;
 
             foreach (IUpdatable service in _updatables)
             {
-                service.Update(Time.deltaTime);
+                if (!_isPaused || service is IUpdatableIgnorePause)
+                    service.Update(Time.deltaTime);
             }
         }
 
         private void FixedUpdate()
         {
-            if (!Initialized || _isPaused) 
+            if (!Initialized) 
                 return;
 
             foreach (IFixedUpdatable service in _fixedUpdatables)
             {
-                service.FixedUpdate(Time.fixedDeltaTime);
+                if (!_isPaused || service is IFixedUpdatableIgnorePause)
+                    service.FixedUpdate(Time.fixedDeltaTime);
             }
         }
     }
