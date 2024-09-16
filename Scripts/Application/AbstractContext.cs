@@ -72,6 +72,19 @@ namespace IT.CoreLib.Application
             return service;
         }
 
+        protected T AddServiceInstance<T>(T serviceInstace) where T : IService
+        {
+            _services.Add(typeof(T), serviceInstace);
+
+            if (serviceInstace is IUpdatable)
+                _updatables.Add(serviceInstace as IUpdatable);
+
+            if (serviceInstace is IFixedUpdatable)
+                _fixedUpdatables.Add(serviceInstace as IFixedUpdatable);
+
+            return serviceInstace;
+        }
+
         protected abstract void InitializeServices();
 
         protected abstract void InitializeUI(ApplicationUIContainer uiContainer);     
